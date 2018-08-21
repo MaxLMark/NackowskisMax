@@ -39,3 +39,6 @@ C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Ra
 C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.g.cshtml.cs
 C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Areas\Identity\Pages\_ViewImports.g.cshtml.cs
 C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Areas\Identity\Pages\Account\Manage\_Layout.g.cshtml.cs
+C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.g.cshtml.cs
+C:\Users\Max\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.g.cshtml.cs
