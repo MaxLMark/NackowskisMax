@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using NackowskisMax.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NackowskisMax.Utility.Http;
 
 namespace NackowskisMax
 {
@@ -33,6 +34,8 @@ namespace NackowskisMax
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddTransient<IRestClient, JsonRestClient>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

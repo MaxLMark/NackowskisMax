@@ -4,16 +4,32 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NackowskisMax.BusinessLogic;
 using NackowskisMax.Models;
+using NackowskisMax.Utility.Http;
 
 namespace NackowskisMax.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IRestClient _restClient;
+        private readonly AuctionFacade _auctionFacade;
+        public HomeController(IRestClient restClient, AuctionFacade auctionFacade)
         {
-            return View();
+            _restClient = restClient;
+            _auctionFacade = auctionFacade;
         }
+
+        public async Task<IActionResult> Index() {
+            //string url = http://nackowskis.azurewebsites.net/api/Auktion/1
+            var items = await _restClient.GetAsync<AuctionItem>("http://nackowskis.azurewebsites.net/api/Auktion/1/2067");
+          
+            return Json(items);
+        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public IActionResult About()
         {
