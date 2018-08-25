@@ -21,7 +21,7 @@ namespace NackowskisMax.Models
         [JsonProperty("Gruppkod")]
         public int GroupId { get; set; }
         [JsonProperty("Utropspris")]
-        public int Estimate { get; set; }
+        public int? Estimate { get; set; }
         [JsonProperty("SkapadAv")]
         public string CreatedBy { get; set; }
 

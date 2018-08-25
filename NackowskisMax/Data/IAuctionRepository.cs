@@ -8,10 +8,10 @@ namespace NackowskisMax.Data
 {
     public interface IAuctionRepository
     {
-        IEnumerable<AuctionItem> GetAll(int groupId);
-        AuctionItem Get(int groupId, int Id);
-        void Create(AuctionItem auction);
-        void Delete(int Id);
-        void Update(AuctionItem auction);
+        Task<AuctionItem[]> GetAllAsync(int groupId);
+        Task<AuctionItem> Get(int groupId, int Id);
+        Task Create(AuctionItem auction);
+        Task Delete(int Id);
+        Task Update(AuctionItem auction);
     }
 }

@@ -10,36 +10,47 @@ namespace NackowskisMax.Data
     public class RestfulAuctionRepository : IAuctionRepository
     {
         private readonly IRestClient _restClient;
-        private string url = "http://nackowskis.azurewebsites.net/api/Auktion/1000";
+        private string url = "http://nackowskis.azurewebsites.net/api/Auktion";
+        private const  int groupId = 1000;
         public RestfulAuctionRepository(IRestClient restClient)
         {
-            restClient = _restClient;
+            _restClient = restClient;
+
+        }
+        public Task Create(AuctionItem auction)
+        {
+
+            //Hallo simppa!!! Funkar detta fint eller ? HALLOOOOOOO
+
+            return _restClient.PostAsync<AuctionItem>(url, auction);
+
+        }
+
+        public Task Delete(int Id)
+        {
+            var urlstring = url + "/" + groupId + "/" + Id;
+            return _restClient.DeleteAsync<AuctionItem>(urlstring);
+        }
+
+        public Task<AuctionItem[]> GetAllAsync(int groupId)
+        {
+            var urlstring = url + "/" + groupId;
+            //HÄR HÄNDER DAS CRASH!!!!
+            var items = _restClient.GetAsync<AuctionItem[]>(urlstring);
+
+            return items;
+        }
+
+        public Task<AuctionItem> Get(int groupId, int Id)
+        {
+            var urlstring = url + "/" + groupId + "/" + Id;
+            return _restClient.GetAsync<AuctionItem>(urlstring);
+        }
+
+        public Task Update(AuctionItem auction)
+        {
             
-        }
-        public void Create(AuctionItem auction)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<AuctionItem> GetAll(int groupId)
-        {
-           // FIX THIS
-            return _restClient.GetAsync(typeof(IEnumerable<AuctionItem>))(url);
-        }
-
-        public AuctionItem Get(int groupId, int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(AuctionItem auction)
-        {
-            throw new NotImplementedException();
+            return _restClient.PutAsync<AuctionItem>(url, auction);
         }
     }
 }

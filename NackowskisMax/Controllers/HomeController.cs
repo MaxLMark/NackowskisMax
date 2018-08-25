@@ -20,16 +20,29 @@ namespace NackowskisMax.Controllers
             _auctionFacade = auctionFacade;
         }
 
-        public async Task<IActionResult> Index() {
-            //string url = http://nackowskis.azurewebsites.net/api/Auktion/1
-            var items = await _restClient.GetAsync<AuctionItem>("http://nackowskis.azurewebsites.net/api/Auktion/1/2067");
+        //public async Task<IActionResult> Index() {
+        //    //string url = http://nackowskis.azurewebsites.net/api/Auktion/1
+        //    var items = await _restClient.GetAsync<AuctionItem>("http://nackowskis.azurewebsites.net/api/Auktion/1/2067");
           
-            return Json(items);
-        }
-        //public IActionResult Index()
-        //{
-        //    return View();
+        //    return Json(items);
         //}
+        public async Task<IActionResult> Index()
+        {
+            var auctionItemList = new List<AuctionItem>();
+            var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
+            foreach (var item in auctionItems)
+            {
+                auctionItemList.Add(item);
+            }
+
+            return View(auctionItemList);
+        }
+
+        public async Task<IActionResult> Delete(string deleteAuction)
+        {
+            
+            return View();
+        }
 
         public IActionResult About()
         {

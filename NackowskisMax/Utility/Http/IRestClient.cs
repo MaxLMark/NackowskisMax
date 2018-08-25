@@ -9,5 +9,8 @@ namespace NackowskisMax.Utility.Http
         Task<TResponse> PostAsync<TResponse>(string url, object requestBody);
         Task<TResponse> GetAsync<TResponse>(string url);
         Task<TResponse> SendAsync<TResponse>(HttpMethod method, string url, object requestBody = null);
+        Task<TResponse> PutAsync<TResponse>(string url, object requestBody);
+        Task<TResponse> DeleteAsync<TResponse>(string url);
+
     }
 }

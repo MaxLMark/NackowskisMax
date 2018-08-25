@@ -8,10 +8,10 @@ namespace NackowskisMax.Data
 {
     public interface IOfferRepository
     {
-        IEnumerable<Offer> GetAll(int groupId);
+        Task<Offer[]> GetAllAsync(int auctionId);
         //AuctionItem GetOffer(int groupId, int Id);
-        void Create(Offer offer);
-        void Delete(int Id);
-        void Update(Offer auction);
+        Task Create(Offer offer);
+        Task Delete(int Id);
+        Task Update(Offer auction);
     }
 }

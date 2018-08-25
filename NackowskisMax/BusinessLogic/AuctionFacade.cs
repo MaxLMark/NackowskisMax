@@ -18,48 +18,53 @@ namespace NackowskisMax.BusinessLogic
             _offerRepository = offerRepository;
         }
 
-        public IEnumerable<AuctionItem> GetAllAuctions()
+        public Task<AuctionItem[]> GetAllAuctionsAsync()
         {
-            return _auctionRepository.GetAll(groupId);
+            //var auctions = await _auctionRepository.GetAllAsync(groupId);
+
+            return _auctionRepository.GetAllAsync(groupId);
         }
-        public AuctionItem GetAuction(int Id)
+        public Task<AuctionItem> GetAuction(int Id)
         {
             return _auctionRepository.Get(groupId, Id);
         }
 
-        public void CreateAuction(AuctionItem auction)
+        public Task CreateAuction(AuctionItem auction)
         {
-            _auctionRepository.Create(auction);
+            return _auctionRepository.Create(auction);
         }
 
-        public void DeleteAuction(int Id)
+        public Task DeleteAuction(int Id)
         {
-            _auctionRepository.Delete(Id);
+            return _auctionRepository.Delete(Id);
         }
 
-        public void UpdateAuction(AuctionItem auction)
+        public Task UpdateAuction(AuctionItem auction)
         {
-            _auctionRepository.Update(auction);
+            return _auctionRepository.Update(auction);
         }
 
-        public void CreateOffer(Offer offer)
+        public Task CreateOffer(Offer offer)
         {
-            _offerRepository.Create(offer);
+            return _offerRepository.Create(offer);
         }
 
-        public void DeleteOffer(int Id)
+        public Task DeleteOffer(int Id)
         {
-            _offerRepository.Delete(Id);
+           return _offerRepository.Delete(Id);
         }
 
-        public IEnumerable<Offer> GetAllOffers()
+        public async Task<Offer[]> GetAllOffersAsync(int auctionId)
         {
-            return _offerRepository.GetAll(groupId);
+
+            var offers = await _offerRepository.GetAllAsync(auctionId);
+
+            return offers;
         }
 
-        public void UpdateOffer(Offer auction)
+        public Task UpdateOffer(Offer auction)
         {
-            _offerRepository.Update(auction);
+            return _offerRepository.Update(auction);
         }
     }
 }

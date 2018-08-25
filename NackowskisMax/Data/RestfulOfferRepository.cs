@@ -10,28 +10,34 @@ namespace NackowskisMax.Data
     public class RestfulOfferRepository : IOfferRepository
     {
         private readonly IRestClient _restClient;
+        private string url = "http://nackowskis.azurewebsites.net/api/Bud";
+        private const int groupId = 1000;
         public RestfulOfferRepository(IRestClient restClient)
         {
-            restClient = _restClient;
+            _restClient = restClient;
         }
-        public void Create(Offer offer)
+        public Task Create(Offer offer)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int Id)
-        {
-            throw new NotImplementedException();
+            return _restClient.PostAsync<Offer>(url, offer);
         }
 
-        public IEnumerable<Offer> GetAll(int groupId)
+        public Task Delete(int Id)
         {
-            throw new NotImplementedException();
+            var urlstring = url + "/" + 0 + "/" + Id;
+            return _restClient.DeleteAsync<Offer>(urlstring);
         }
 
-        public void Update(Offer auction)
+        public Task<Offer[]> GetAllAsync(int auctionId)
         {
-            throw new NotImplementedException();
+            var urlstring = "/" + 0 + "/" + auctionId;
+            return _restClient.GetAsync<Offer[]>(urlstring);
+        }
+
+        //OBS: Funktionaliteten verkar saknas från APIn
+        public Task Update(Offer auction)
+        {
+            var urlstring = url + "/" + 0 + "/" + auction.Id;
+            return _restClient.PostAsync<Offer>(urlstring, auction);
         }
     }
 }
