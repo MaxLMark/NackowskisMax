@@ -12,11 +12,9 @@ namespace NackowskisMax.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRestClient _restClient;
         private readonly AuctionFacade _auctionFacade;
-        public HomeController(IRestClient restClient, AuctionFacade auctionFacade)
+        public HomeController(AuctionFacade auctionFacade)
         {
-            _restClient = restClient;
             _auctionFacade = auctionFacade;
         }
 

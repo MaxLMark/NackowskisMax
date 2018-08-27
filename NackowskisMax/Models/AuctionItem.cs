@@ -9,9 +9,9 @@ namespace NackowskisMax.Models
     public class AuctionItem
     {
         [JsonProperty("AuktionID")]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [JsonProperty("Titel")]
-        public string Titel { get; set; }
+        public string Title { get; set; }
         [JsonProperty("Beskrivning")]
         public string Description { get; set; }
         [JsonProperty("StartDatum")]

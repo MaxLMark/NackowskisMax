@@ -234,8 +234,10 @@ header.masthead h2 {
 
 .portfolio-modal .portfolio-modal-dialog {
   padding: 3rem 1rem;
-  min-height: calc(100vh - 2rem);
-  margin: 1rem calc(1rem - 8px);
+  /*min-height: calc(100vh - 2rem);*/
+  width: 50%;
+  /*margin: 1rem calc(1rem - 8px);*/
+  margin:auto;
   position: relative;
   z-index: 2;
   -moz-box-shadow: 0 0 3rem 1rem rgba(0, 0, 0, 0.5);
@@ -259,9 +261,9 @@ header.masthead h2 {
 
 @media (min-width: 768px) {
   .portfolio-modal .portfolio-modal-dialog {
-    min-height: 100vh;
+    /*min-height: 100vh;*/
     padding: 5rem;
-    margin: 3rem calc(3rem - 8px);
+    /*margin: 3rem calc(3rem - 8px);*/
   }
   .portfolio-modal .portfolio-modal-dialog h2 {
     font-size: 3rem;

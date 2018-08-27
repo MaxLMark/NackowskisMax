@@ -18,7 +18,21 @@
     <div class="container" style="padding-top:80px">
         <h2 class="text-center text-uppercase  text-dark">Auction list:</h2>
         <hr class="star-dark mb-5">
+        @{
+            var currentUser = "";
+            var isAdmin = false;
 
+            if (User.IsInRole("Admin"))
+            {
+                isAdmin = true;
+            }
+
+            if (User.Identity.Name != null)
+            {
+
+                currentUser = User.Identity.Name;
+            }
+        }
         <div class="row marranTable">
 
             <table id="example" class="display" style="width:100%">
@@ -37,9 +51,10 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        var serializedItems = Newtonsoft.Json.JsonConvert.SerializeObject(item);
+                        <tr data-item="@serializedItems">
                             <td>@item.Id</td>
-                            <td>@item.Titel</td>
+                            <td>@item.Title</td>
                             <td>@item.Description</td>
                             <td>@item.StartDate.ToShortDateString()</td>
                             <td>@item.EndDate.ToShortDateString()</td>
@@ -60,31 +75,41 @@
                     </tr>
                 </tfoot>
             </table>
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="btn btn-primary portfolio-item" href="#portfolio-modal-auction" role="button" id="js-createAuction" data-url="/Admin/Create">
+                    Create Auction
+                </a>
+                <a class="btn btn-primary portfolio-item disabled" href="#portfolio-modal-auction" role="button" id="js-editAuction" data-url="/Admin/Edit">
+                    Edit
+                </a>
+                <a class="btn btn-danger portfolio-item disabled float-right" href="#portfolio-modal-deleteAuction" role="button" id="js-deleteAuction" data-url="/Admin/Delete">
+                    Delete
+                </a>
+            }
+            else if (User.IsInRole("Regular"))
+            {
+                <a class="btn btn-primary portfolio-item" href="#portfolio-modal-auction" role="button" id="js-createAuction" data-url="/Auction/Create">
+                    Create Auction
+                </a>
+                <a class="btn btn-danger portfolio-item disabled float-right" href="#portfolio-modal-deleteAuction" role="button" id="js-deleteAuction" data-url="/Auction/Delete">
+                    Delete
+                </a>
+            }
 
-            @using (Html.BeginForm("CreateAuction", "Home", method: FormMethod.Post, htmlAttributes: new { @style = "display: inline-block;" }))
-            {
-            }
-            @*<input type="hidden" name="newAuction" id="newAuction" value="" />*@
-            @*<input type="submit" value="Details" />*@
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">hellotest</a>
-            <button type="submit" class="btn btn-primary" value="New Auction" id="newAuction" data-toggle="modal" data-target="#exampleModal">Create Auction</button>
-            @using (Html.BeginForm("Edit", "Home", method: FormMethod.Post, htmlAttributes: new { @style = "display: inline-block;" }))
-            {
-                <input type="hidden" name="editAuction" id="editAuction" value="" />
-                <input type="submit" value="Edit" class="btn btn-primary" />
-            }
-            @using (Html.BeginForm("Delete", "Admin", method: FormMethod.Post, htmlAttributes: new { @style = "display: inline;" }))
-            {
-                <input type="hidden" name="deleteAuction" id="deleteAuction" value="" />
-                <input type="submit" value="Delete" class="btn btn-danger float-right" />
-            }
+
+
+
+
+
         </div>
         <hr class="star-dark mb-5">
     </div>
 </section>
 
-<!-- Portfolio Modal 1 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
+
+<!-- Auction Modal -->
+<div class="portfolio-modal mfp-hide" id="portfolio-modal-auction">
     <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
             <i class="fa fa-3x fa-times"></i>
@@ -92,12 +117,82 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+                    <h2 class="text-secondary text-uppercase mb-0" id="modalTitle"></h2>
                     <hr class="star-dark mb-5">
-                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                    <form name="auctionForm" id="js-auctionForm" method="post" action="">
+                        <input type="hidden" name="Id" id="js-auctionId" required="required" value="" />
+                        <input type="hidden" name="GroupId" required="required" value="1000" />
+                        <div class="control-group">
+                            <div class="form-group">
+                                <input class="form-control" name="title" id="js-auctionTitel" type="text" placeholder="Titel" required="required" data-validation-required-message="Please enter titel." aria-invalid="false">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group">
+                                <input class="form-control" name="description" id="js-auctionDescription" type="text" placeholder="Description" required="required" data-validation-required-message="Please enter a description." aria-invalid="false">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group">
+                                @*<input name="startDate" id="js-startDate" width="276" required="required" data-validation-required-message="Please enter a start date" />*@
+
+                                <div class="input-group date" id="js-startDate" data-target-input="nearest">
+                                    <input name="startDate" type="text" class="form-control datetimepicker-input" data-target="#js-startDate" required="required" data-validation-required-message="Please enter a start date" />
+                                    <div class="input-group-append" data-target="#js-startDate" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group">
+                                @*<input name="endDate" id="js-endDate" width="276" required="required" data-validation-required-message="Please enter a end date" />*@
+
+                                <div class="input-group date" id="js-endDate" data-target-input="nearest">
+                                    <input type="text" name="endDate" class="form-control datetimepicker-input" data-target="#js-endDate" required="required" data-validation-required-message="Please enter a end date" />
+                                    <div class="input-group-append" data-target="#js-endDate" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group">
+                                <input class="form-control" name="estimate" id="js-auctionEstimate" type="number" placeholder="Estimate" required="required" data-validation-required-message="Please enter a estimate." aria-invalid="false">
+                            </div>
+                        </div>
+                        <hr class="star-dark mb-5">
+                        <input class="btn btn-primary btn-lg float-left rounded-pill " type="submit" value="Save">
+                        @*<input type="submit" value="Submit">*@
+                    </form>
+                    <a class="btn btn-danger btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
                         <i class="fa fa-close"></i>
-                        Close Project
+                        Close
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portfolio-modal mfp-hide" id="portfolio-modal-deleteAuction">
+    <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#" onclick="window.location.reload(true);">
+            <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Delete Auction</h3>
+                    <hr class="star-dark mb-5">
+                    <h4 class="text-dark">This action cannot be undone</h4>
+                    <form name="auctionForm" id="js-deleteAuctionForm" method="post" action="">
+                        <input type="hidden" name="Id" id="js-auctionId" required="required" value="" />
+                        <input class="btn btn-danger btn-lg float-left rounded-pill " type="submit" value="Delete">
+                    </form>
+                    <a class="btn btn-default btn-outline-primary btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
+                        <i class="fa fa-close"></i>
+                        Cancel
                     </a>
                 </div>
             </div>
@@ -108,29 +203,143 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+            var currUser = '@currentUser';
+            var isAdmin = '@isAdmin';
+
+            if (currUser !== '') {
+                //doo it
+            }
+
+            // Setup - add a text input to each footer cell
+            $('#example tfoot th').each(function () {
+                var title = $(this).text();
+                if (title === "Titel") {
+                    $(this).html('<input type="text" placeholder="Search title" />');
+                } else if (title === "Beskrivning") {
+                    $(this).html('<input type="text" placeholder="Search description" />');
+                }
+            });
+
+
             var table = $('#example').DataTable();
+            $(".dataTables_filter").hide();
+
+            // Apply the search
+            table.columns().every(function () {
+                var that = this;
+
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+
 
             $('#example tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
+                    $('#js-editAuction').addClass("disabled");
+                    $('#js-deleteAuction').addClass("disabled");
                 }
                 else {
+                    var items = $(this).data("item");
+
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
                     $('#newAuction').val($(this).closest('tr').children('td:first').text());
                     $('#deleteAuction').val($(this).closest('tr').children('td:first').text());
+                    if (isAdmin === 'true' || currUser === items.SkapadAv ) {
 
+                    $('#js-deleteAuction').removeClass("disabled");
+                    } else {
+                        $('#js-deleteAuction').addClass("disabled");
+                    }
+                    $('#js-editAuction').removeClass("disabled");
+                    //var items = $(this).data("item");
+                    //console.log(items.Titel);
                 }
             });
 
-            $('#newAuction').click(function () {
-                $('#exampleModal').modal('toggle');
+            //EDIT AUCTION
+            $("#js-editAuction").on('click', function () {
+                var items = table.$('tr.selected').data("item");
+                var startDate = items.StartDatum;
+                var endDate = items.SlutDatum;
+                var url = $(this).attr('data-url');
+
+                endDate = endDate.substring(0, endDate.indexOf('T'));
+                startDate = startDate.substring(0, startDate.indexOf('T'));
+
+                //console.log(items);
+
+                //Ändra modal titlen
+                $('#modalTitle').text("Edit Auction");
+
+                //Ge inputsen rätt värden
+                $('#js-auctionForm').attr('action', url);
+                $('#js-auctionId').val(parseInt(items.AuktionID));
+                $("#js-auctionTitel").val(items.Titel);
+                $("#js-auctionDescription").val(items.Beskrivning);
+                $("#js-startDate").val(startDate);
+                $("#js-endDate").val(endDate);
+                $('#js-auctionEstimate').val(parseInt(items.Utropspris));
+
             });
-            //$('#deleteAuction').click(function () {
-            //    //alert($('.selected').parent().siblings(":first").text());
-            //    var value = $('.selected').closest('tr').children('td:first').text();
-            //    alert(value);
+
+            //CREATE NEW AUCTION
+            $("#js-createAuction").on('click', function () {
+
+                var url = $(this).attr('data-url');
+                //Ändra modal titlen
+                $('#modalTitle').text("Create Auction");
+                $('#js-auctionForm').attr('action', url);
+                $('#js-auctionId').val('');
+                $("#js-auctionTitel").val('');
+                $("#js-auctionDescription").val('');
+                $("#js-startDate").val('');
+                $("#js-endDate").val('');
+                $('#js-auctionEstimate').val('');
+
+
+            });
+
+            //DELETE AUCTION
+            $("#js-deleteAuction").on('click', function () {
+                var items = table.$('tr.selected').data("item");
+                var url = $(this).attr('data-url');
+
+                $('#js-auctionId').val(parseInt(items.AuktionID));
+                //Ge urlen till modalens form
+                $('#js-deleteAuctionForm').attr('action', url);
+            });
+
+            //DATETIME PICKER
+            $('#js-startDate').datetimepicker({ format: "YYYY-MM-DD HH:mm"});
+            $('#js-endDate').datetimepicker({
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm"
+            });
+            $("#js-startDate").on("change.datetimepicker", function (e) {
+                $('#js-endDate').datetimepicker('minDate', e.date);
+            });
+            $("#js-endDate").on("change.datetimepicker", function (e) {
+                $('#js-startDate').datetimepicker('maxDate', e.date);
+            });
+
+            //$('#js-startDate').datepicker({
+            //    uiLibrary: 'bootstrap4',
+            //    format: 'yyyy-mm-dd'
             //});
+
+            //$('#js-endDate').datepicker({
+            //    uiLibrary: 'bootstrap4',
+            //    format: 'yyyy-mm-dd'
+            //});
+
+
         });
     </script>
 
