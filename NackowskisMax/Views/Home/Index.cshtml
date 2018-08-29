@@ -16,6 +16,41 @@
         color: red;
         font-weight: bold;
     }
+
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    .notValidPrice {
+        border: solid;
+        border-color: red !important;
+    }
+
+    .isValidPrice {
+        border: solid;
+        border-color: lightgreen !important;
+    }
+
+    .notValidPrice:focus {
+        border: solid;
+        border-color: red !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none;
+    }
+
+    .isValidPrice:focus {
+        border:solid;
+        border-color:lightgreen !important;
+        -webkit-box-shadow:none !important;
+        box-shadow:none;
+
+    }
+
 </style>
 
 
@@ -227,10 +262,10 @@
                         <input type="hidden" name="AuctionId" id="js-auctionId" required="required" value="" />
                         <div class="control-group">
                             <div class="form-group">
-                                <input class="form-control" type="number" name="Sum" required="required" placeholder="Input bid here!" />
+                                <input id="js-bidInput" class="form-control" type="number" name="Sum" required="required" placeholder="Input bid here!" />
                             </div>
                         </div>
-                        <input class="btn btn-primary btn-lg float-left rounded-pill " type="submit" value="Place Bid">
+                        <input id="js-bidSubmit" class="btn btn-primary btn-lg float-left rounded-pill disabled" type="submit" value="Place Bid" disabled="disabled">
                     </form>
                     <a class="btn btn-default btn-outline-primary btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
                         <i class="fa fa-close"></i>
@@ -349,18 +384,21 @@
 
             //CREATE NEW BID
             $('#js-showBids').on('click', function () {
+                $("ul").empty();
+                $('#js-bidSubmit').addClass("disabled");
                 var items = table.$('tr.selected').data("item");
                 var url = $(this).attr('data-url');
                 if (items.OfferList.length > 0) {
 
                     $.each(items.OfferList, function (index, value) {
 
-                        $('#js-bidList').prepend('<li><p> Bid: ' + value.Summa + 'kr Bidder: ' + value.Budgivare + '</p></li>');
+                        $('#js-bidList').prepend('<li value="'+value.Summa+'"><p> Bid: ' + value.Summa + 'kr Bidder: ' + value.Budgivare + '</p></li>');
 
                     });
 
 
                     $("li p").first().addClass("redText");
+                    $("li").first().addClass("js-highestBid");
 
                 };
 
@@ -368,7 +406,27 @@
                 $('#js-auctionId').val(parseInt(items.AuktionID));
             });
 
+            //Validering på inputen
+            $('#js-bidInput').keyup(function(){
+                //console.log($("#js-bidInput").val());
+                
+                var inputValue = $(this).val();
+                var highestBid = $('.js-highestBid').first().val();
 
+                if (inputValue > highestBid || highestBid === undefined) {
+                    $(this).addClass("isValidPrice");
+                    $(this).removeClass("notValidPrice");
+                    $('#js-bidSubmit').removeClass("disabled");
+                    $('#js-bidSubmit').removeAttr("disabled");
+
+                } else if (highestBid >= inputValue) {
+                    $(this).addClass("notValidPrice");
+                    $(this).removeClass("isValidPrice");
+                    $('#js-bidSubmit').addClass("disabled");
+                    $('#js-bidSubmit').attr('disabled',"disabled");
+                }
+
+            });
 
             //DELETE AUCTION
             $("#js-deleteAuction").on('click', function () {
