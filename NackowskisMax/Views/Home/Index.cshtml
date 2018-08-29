@@ -11,6 +11,11 @@
         display: block;
         width: 80%;
     }
+
+    .redText {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 
 
@@ -52,7 +57,7 @@
                     @foreach (var item in Model)
                     {
                         var serializedItems = Newtonsoft.Json.JsonConvert.SerializeObject(item);
-                        <tr data-item="@serializedItems">
+                        <tr data-item="@serializedItems" data-bids="@item.OfferList">
                             <td>@item.Id</td>
                             <td>@item.Title</td>
                             <td>@item.Description</td>
@@ -92,6 +97,10 @@
                 <a class="btn btn-primary portfolio-item" href="#portfolio-modal-auction" role="button" id="js-createAuction" data-url="/Auction/Create">
                     Create Auction
                 </a>
+                <a class="btn btn-secondary portfolio-item" href="#portfolio-modal-auctionOffers" role="button" id="js-showBids" data-url="/Auction/CreateBid">
+                    Show bids
+                </a>
+
                 <a class="btn btn-danger portfolio-item disabled float-right" href="#portfolio-modal-deleteAuction" role="button" id="js-deleteAuction" data-url="/Auction/Delete">
                     Delete
                 </a>
@@ -137,7 +146,7 @@
                                 @*<input name="startDate" id="js-startDate" width="276" required="required" data-validation-required-message="Please enter a start date" />*@
 
                                 <div class="input-group date" id="js-startDate" data-target-input="nearest">
-                                    <input name="startDate" type="text" class="form-control datetimepicker-input" data-target="#js-startDate" required="required" data-validation-required-message="Please enter a start date" />
+                                    <input name="startDate" id="js-startDateInput" type="text" class="form-control datetimepicker-input" data-target="#js-startDate" required="required" data-validation-required-message="Please enter a start date" />
                                     <div class="input-group-append" data-target="#js-startDate" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -149,7 +158,7 @@
                                 @*<input name="endDate" id="js-endDate" width="276" required="required" data-validation-required-message="Please enter a end date" />*@
 
                                 <div class="input-group date" id="js-endDate" data-target-input="nearest">
-                                    <input type="text" name="endDate" class="form-control datetimepicker-input" data-target="#js-endDate" required="required" data-validation-required-message="Please enter a end date" />
+                                    <input type="text" id="js-endDateInput" name="endDate" class="form-control datetimepicker-input" data-target="#js-endDate" required="required" data-validation-required-message="Please enter a end date" />
                                     <div class="input-group-append" data-target="#js-endDate" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
@@ -183,12 +192,45 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Delete Auction</h3>
+                    <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Bids</h3>
                     <hr class="star-dark mb-5">
                     <h4 class="text-dark">This action cannot be undone</h4>
                     <form name="auctionForm" id="js-deleteAuctionForm" method="post" action="">
                         <input type="hidden" name="Id" id="js-auctionId" required="required" value="" />
                         <input class="btn btn-danger btn-lg float-left rounded-pill " type="submit" value="Delete">
+                    </form>
+                    <a class="btn btn-default btn-outline-primary btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
+                        <i class="fa fa-close"></i>
+                        Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portfolio-modal mfp-hide" id="portfolio-modal-auctionOffers">
+    <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#" onclick="window.location.reload(true);">
+            <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Bids:</h3>
+                    <hr class="star-dark mb-5">
+                    <ul id="js-bidList">
+
+                    </ul>
+                    <hr class="star-dark mb-5">
+                    <form name="bidForm" id="js-createBidForm" method="post" action="">
+                        <input type="hidden" name="AuctionId" id="js-auctionId" required="required" value="" />
+                        <div class="control-group">
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="Sum" required="required" placeholder="Input bid here!" />
+                            </div>
+                        </div>
+                        <input class="btn btn-primary btn-lg float-left rounded-pill " type="submit" value="Place Bid">
                     </form>
                     <a class="btn btn-default btn-outline-primary btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
                         <i class="fa fa-close"></i>
@@ -251,7 +293,7 @@
                     $(this).addClass('selected');
                     $('#newAuction').val($(this).closest('tr').children('td:first').text());
                     $('#deleteAuction').val($(this).closest('tr').children('td:first').text());
-                    if (isAdmin === 'true' || currUser === items.SkapadAv ) {
+                    if (isAdmin === 'True' || currUser === items.SkapadAv ) {
 
                     $('#js-deleteAuction').removeClass("disabled");
                     } else {
@@ -270,8 +312,8 @@
                 var endDate = items.SlutDatum;
                 var url = $(this).attr('data-url');
 
-                endDate = endDate.substring(0, endDate.indexOf('T'));
-                startDate = startDate.substring(0, startDate.indexOf('T'));
+                //endDate = endDate.substring(0, endDate.indexOf('T'));
+                //startDate = startDate.substring(0, startDate.indexOf('T'));
 
                 //console.log(items);
 
@@ -283,8 +325,8 @@
                 $('#js-auctionId').val(parseInt(items.AuktionID));
                 $("#js-auctionTitel").val(items.Titel);
                 $("#js-auctionDescription").val(items.Beskrivning);
-                $("#js-startDate").val(startDate);
-                $("#js-endDate").val(endDate);
+                $("#js-startDateInput").val(startDate);
+                $("#js-endDateInput").val(endDate);
                 $('#js-auctionEstimate').val(parseInt(items.Utropspris));
 
             });
@@ -303,8 +345,30 @@
                 $("#js-endDate").val('');
                 $('#js-auctionEstimate').val('');
 
-
             });
+
+            //CREATE NEW BID
+            $('#js-showBids').on('click', function () {
+                var items = table.$('tr.selected').data("item");
+                var url = $(this).attr('data-url');
+                if (items.OfferList.length > 0) {
+
+                    $.each(items.OfferList, function (index, value) {
+
+                        $('#js-bidList').prepend('<li><p> Bid: ' + value.Summa + 'kr Bidder: ' + value.Budgivare + '</p></li>');
+
+                    });
+
+
+                    $("li p").first().addClass("redText");
+
+                };
+
+                $('#js-createBidForm').attr('action', url);
+                $('#js-auctionId').val(parseInt(items.AuktionID));
+            });
+
+
 
             //DELETE AUCTION
             $("#js-deleteAuction").on('click', function () {
@@ -329,15 +393,6 @@
                 $('#js-startDate').datetimepicker('maxDate', e.date);
             });
 
-            //$('#js-startDate').datepicker({
-            //    uiLibrary: 'bootstrap4',
-            //    format: 'yyyy-mm-dd'
-            //});
-
-            //$('#js-endDate').datepicker({
-            //    uiLibrary: 'bootstrap4',
-            //    format: 'yyyy-mm-dd'
-            //});
 
 
         });

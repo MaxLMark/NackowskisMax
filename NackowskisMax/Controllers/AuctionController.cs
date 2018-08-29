@@ -37,5 +37,13 @@ namespace NackowskisMax.Controllers
             await _auctionFacade.DeleteAuction(Id);
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> CreateBid(Offer offer)
+        {
+            offer.Bidder = User.Identity.Name;
+
+            await _auctionFacade.CreateOffer(offer);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

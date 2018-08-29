@@ -25,6 +25,8 @@ namespace NackowskisMax.Models
         [JsonProperty("SkapadAv")]
         public string CreatedBy { get; set; }
 
+        public List<Offer> OfferList = new List<Offer>();
+
     }
 
 }

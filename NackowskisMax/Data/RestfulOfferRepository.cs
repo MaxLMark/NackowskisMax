@@ -29,7 +29,7 @@ namespace NackowskisMax.Data
 
         public Task<Offer[]> GetAllAsync(int auctionId)
         {
-            var urlstring = "/" + 0 + "/" + auctionId;
+            var urlstring = url +"/" + 0 + "/" + auctionId;
             return _restClient.GetAsync<Offer[]>(urlstring);
         }
 

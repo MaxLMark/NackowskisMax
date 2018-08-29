@@ -30,6 +30,15 @@ namespace NackowskisMax.Controllers
             var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
             foreach (var item in auctionItems)
             {
+                var offerlist = await _auctionFacade.GetAllOffersAsync((int)item.Id);
+                if (offerlist.Length>0)
+                {
+                    foreach (var offer in offerlist)
+                    {
+                        item.OfferList.Add(offer);
+                    }
+                }
+                
                 auctionItemList.Add(item);
             }
 
