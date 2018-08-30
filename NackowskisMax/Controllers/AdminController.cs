@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using NackowskisMax.Areas.Identity.Pages.Account;
 using NackowskisMax.BusinessLogic;
 using NackowskisMax.Models;
 
@@ -12,11 +14,24 @@ namespace NackowskisMax.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<RegisterModel> _logger;
+        private readonly IEmailSender _emailSender;
+
         //private const int groupId = 1000;
         private readonly AuctionFacade _auctionFacade;
-        public AdminController(AuctionFacade auctionFacade)
+        public AdminController(AuctionFacade auctionFacade,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            ILogger<RegisterModel> logger,
+            IEmailSender emailSender)
         {
             _auctionFacade = auctionFacade;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _logger = logger;
+            _emailSender = emailSender;
         }
         public async Task<IActionResult> Delete(int Id)
         {
@@ -52,23 +67,26 @@ namespace NackowskisMax.Controllers
             return View();
         }
 
-        //public IActionResult Edit()
-        //{
-        //    ViewData["Message"] = "Your application description page.";
+        public IActionResult CreateAdmin()
+        {
+            var model = new NewAdminInput();
+            return View(model);
+        }
 
-        //    return View();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> CreateAdmin(NewAdminInput newAdmin)
+        {
+            var user = new IdentityUser { UserName = newAdmin.Email, Email = newAdmin.Email };
+            var result = await _userManager.CreateAsync(user, newAdmin.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "Admin");
 
-        //public IActionResult Create()
-        //{
-        //    ViewData["Message"] = "Your contact page.";
+            }
+            return RedirectToAction("Index", "Home");
+            
+        }
 
-        //    return View();
-        //}
 
-        //public IActionResult Delete()
-        //{
-        //    return View();
-        //}
     }
 }

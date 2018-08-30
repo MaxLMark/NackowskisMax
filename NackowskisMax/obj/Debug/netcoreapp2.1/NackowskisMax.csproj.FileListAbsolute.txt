@@ -86,3 +86,4 @@ C:\Users\maxma\Source\Repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\
 C:\Users\maxma\Source\Repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\NackowskisMax.dll
 C:\Users\maxma\Source\Repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\NackowskisMax.pdb
 C:\Users\maxma\Source\Repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\NackowskisMax.csproj.CopyComplete
+C:\Users\maxma\source\repos\NackowskisMax\NackowskisMax\obj\Debug\netcoreapp2.1\Razor\Views\Admin\CreateAdmin.g.cshtml.cs

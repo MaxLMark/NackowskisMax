@@ -44,13 +44,15 @@
     }
 
     .isValidPrice:focus {
-        border:solid;
-        border-color:lightgreen !important;
-        -webkit-box-shadow:none !important;
-        box-shadow:none;
-
+        border: solid;
+        border-color: lightgreen !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none;
     }
 
+    .js-inActiveAuction {
+        color: lightcoral;
+    }
 </style>
 
 
@@ -85,6 +87,7 @@
                         <th>EndDate</th>
                         <th>Estimate</th>
                         <th>CreatedBy</th>
+                        <th>Active</th>
 
                     </tr>
                 </thead>
@@ -92,15 +95,33 @@
                     @foreach (var item in Model)
                     {
                         var serializedItems = Newtonsoft.Json.JsonConvert.SerializeObject(item);
-                        <tr data-item="@serializedItems" data-bids="@item.OfferList">
-                            <td>@item.Id</td>
-                            <td>@item.Title</td>
-                            <td>@item.Description</td>
-                            <td>@item.StartDate.ToShortDateString()</td>
-                            <td>@item.EndDate.ToShortDateString()</td>
-                            <td>@item.Estimate SEK</td>
-                            <td>@item.CreatedBy</td>
-                        </tr>
+                        if (item.Active == "No")
+                        {
+
+                            <tr data-item="@serializedItems" data-bids="@item.OfferList" class="d-none js-inActiveAuction">
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.StartDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.Estimate SEK</td>
+                                <td>@item.CreatedBy</td>
+                                <td>@item.Active</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr data-item="@serializedItems" data-bids="@item.OfferList">
+                                <td>@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.StartDate.ToShortDateString()</td>
+                                <td>@item.EndDate.ToShortDateString()</td>
+                                <td>@item.Estimate SEK</td>
+                                <td>@item.CreatedBy</td>
+                                <td>@item.Active</td>
+                            </tr>
+                        }
                     }
                 </tbody>
                 <tfoot>
@@ -112,6 +133,7 @@
                         <th>EndDate</th>
                         <th>Estimate</th>
                         <th>CreatedBy</th>
+                        <th>Active</th>
                     </tr>
                 </tfoot>
             </table>
@@ -123,6 +145,9 @@
                 <a class="btn btn-primary portfolio-item disabled" href="#portfolio-modal-auction" role="button" id="js-editAuction" data-url="/Admin/Edit">
                     Edit
                 </a>
+                <a class="btn btn-secondary portfolio-item" href="#portfolio-modal-auctionOffers" role="button" id="js-showBids" data-url="/Auction/CreateBid">
+                    Show bids
+                </a>
                 <a class="btn btn-danger portfolio-item disabled float-right" href="#portfolio-modal-deleteAuction" role="button" id="js-deleteAuction" data-url="/Admin/Delete">
                     Delete
                 </a>
@@ -132,10 +157,9 @@
                 <a class="btn btn-primary portfolio-item" href="#portfolio-modal-auction" role="button" id="js-createAuction" data-url="/Auction/Create">
                     Create Auction
                 </a>
-                <a class="btn btn-secondary portfolio-item" href="#portfolio-modal-auctionOffers" role="button" id="js-showBids" data-url="/Auction/CreateBid">
+                <a class="btn btn-secondary portfolio-item disabled" href="#portfolio-modal-auctionOffers" role="button" id="js-showBids" data-url="/Auction/CreateBid">
                     Show bids
                 </a>
-
                 <a class="btn btn-danger portfolio-item disabled float-right" href="#portfolio-modal-deleteAuction" role="button" id="js-deleteAuction" data-url="/Auction/Delete">
                     Delete
                 </a>
@@ -219,6 +243,7 @@
     </div>
 </div>
 
+<!-- Delete Auction Modal -->
 <div class="portfolio-modal mfp-hide" id="portfolio-modal-deleteAuction">
     <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#" onclick="window.location.reload(true);">
@@ -229,10 +254,10 @@
                 <div class="col-lg-8 mx-auto">
                     <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Bids</h3>
                     <hr class="star-dark mb-5">
-                    <h4 class="text-dark">This action cannot be undone</h4>
+                    <h4 id="js-deleteWarning" class="text-dark">This action cannot be undone</h4>
                     <form name="auctionForm" id="js-deleteAuctionForm" method="post" action="">
                         <input type="hidden" name="Id" id="js-auctionId" required="required" value="" />
-                        <input class="btn btn-danger btn-lg float-left rounded-pill " type="submit" value="Delete">
+                        <input id="js-deleteSubmit" class="btn btn-danger btn-lg float-left rounded-pill " type="submit" value="Delete">
                     </form>
                     <a class="btn btn-default btn-outline-primary btn-lg rounded-pill portfolio-modal-dismiss float-right" href="#">
                         <i class="fa fa-close"></i>
@@ -244,6 +269,7 @@
     </div>
 </div>
 
+<!-- Show Bids Modal -->
 <div class="portfolio-modal mfp-hide" id="portfolio-modal-auctionOffers">
     <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#" onclick="window.location.reload(true);">
@@ -254,9 +280,8 @@
                 <div class="col-lg-8 mx-auto">
                     <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Bids:</h3>
                     <hr class="star-dark mb-5">
-                    <ul id="js-bidList">
-
-                    </ul>
+                    <p id="js-highestBidLabel" style="font-weight:bold">No bids yet!</p>
+                    <ul id="js-bidList"></ul>
                     <hr class="star-dark mb-5">
                     <form name="bidForm" id="js-createBidForm" method="post" action="">
                         <input type="hidden" name="AuctionId" id="js-auctionId" required="required" value="" />
@@ -314,27 +339,38 @@
                 });
             });
 
+            $('th input').keyup(function () {
+                $('.js-inActiveAuction').removeClass('d-none');
+                $('tr.selected').removeClass("selected");
+                $('#js-editAuction').addClass("disabled");
+                $('#js-deleteAuction').addClass("disabled");
+                $('#js-showBids').addClass("disabled");
+
+            });
 
             $('#example tbody').on('click', 'tr', function () {
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
                     $('#js-editAuction').addClass("disabled");
                     $('#js-deleteAuction').addClass("disabled");
+                    $('#js-showBids').addClass("disabled");
                 }
                 else {
                     var items = $(this).data("item");
 
                     table.$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
+                    $('#js-showBids').removeClass("disabled");
                     $('#newAuction').val($(this).closest('tr').children('td:first').text());
                     $('#deleteAuction').val($(this).closest('tr').children('td:first').text());
                     if (isAdmin === 'True' || currUser === items.SkapadAv ) {
-
+                    $('#js-editAuction').removeClass("disabled");
+                        
                     $('#js-deleteAuction').removeClass("disabled");
                     } else {
                         $('#js-deleteAuction').addClass("disabled");
                     }
-                    $('#js-editAuction').removeClass("disabled");
+
                     //var items = $(this).data("item");
                     //console.log(items.Titel);
                 }
@@ -385,11 +421,14 @@
             //CREATE NEW BID
             $('#js-showBids').on('click', function () {
                 $("ul").empty();
+                $('#js-bidInput').removeClass('d-none');
+                $('#js-bidSubmit').removeClass('d-none');
                 $('#js-bidSubmit').addClass("disabled");
+                $('#js-highestBidLabel').text("No bids yet!")
                 var items = table.$('tr.selected').data("item");
                 var url = $(this).attr('data-url');
                 if (items.OfferList.length > 0) {
-
+                    $('#js-highestBidLabel').text("Highest bid yet: ");
                     $.each(items.OfferList, function (index, value) {
 
                         $('#js-bidList').prepend('<li value="'+value.Summa+'"><p> Bid: ' + value.Summa + 'kr Bidder: ' + value.Budgivare + '</p></li>');
@@ -399,7 +438,13 @@
 
                     $("li p").first().addClass("redText");
                     $("li").first().addClass("js-highestBid");
-
+                    if (table.$('tr.selected').hasClass("js-inActiveAuction")) {
+                        $('#js-highestBidLabel').text("The winning bid:");
+                        $('#js-bidInput').addClass('d-none');
+                        $('#js-bidSubmit').addClass('d-none');
+                        $('#js-bidList').find('li').slice(1).remove();
+                        $('#js-bidlist').prepend('<p> Winning bid of the auction: </p>');
+                    }
                 };
 
                 $('#js-createBidForm').attr('action', url);
@@ -409,7 +454,7 @@
             //Validering på inputen
             $('#js-bidInput').keyup(function(){
                 //console.log($("#js-bidInput").val());
-                
+
                 var inputValue = $(this).val();
                 var highestBid = $('.js-highestBid').first().val();
 
@@ -432,6 +477,15 @@
             $("#js-deleteAuction").on('click', function () {
                 var items = table.$('tr.selected').data("item");
                 var url = $(this).attr('data-url');
+
+
+                $('#js-deleteSubmit').removeAttr('disabled');
+                $('#js-deleteWarning').text("This action cannot be undone");
+
+                if (items.OfferList.length > 0) {
+                    $('#js-deleteWarning').text("You cannot delete an auction with existing bids!");
+                    $('#js-deleteSubmit').attr('disabled', 'disabled');
+                }
 
                 $('#js-auctionId').val(parseInt(items.AuktionID));
                 //Ge urlen till modalens form

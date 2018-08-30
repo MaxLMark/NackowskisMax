@@ -31,6 +31,18 @@ namespace NackowskisMax.Controllers
             foreach (var item in auctionItems)
             {
                 var offerlist = await _auctionFacade.GetAllOffersAsync((int)item.Id);
+                var today = DateTime.Now;
+                var auctionEndDate = item.EndDate;
+
+                var result = DateTime.Compare(today, auctionEndDate);
+
+                if (result < 0)
+                    item.Active = "Yes";
+                else if (result == 0)
+                    item.Active = "Yes";
+                else
+                    item.Active = "No";
+
                 if (offerlist.Length>0)
                 {
                     foreach (var offer in offerlist)
