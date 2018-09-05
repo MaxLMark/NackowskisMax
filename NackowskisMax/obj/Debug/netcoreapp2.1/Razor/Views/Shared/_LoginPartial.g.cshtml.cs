@@ -82,12 +82,12 @@ using Microsoft.AspNetCore.Identity;
             WriteLiteral("    ");
             EndContext();
             BeginContext(185, 736, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "51f35771cab14ada8872b70490b4bd03", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d36b8fa0b9814b0e85fbba3a5fe3c397", async() => {
                 BeginContext(367, 124, true);
                 WriteLiteral("\r\n        <ul class=\"nav navbar-nav navbar-right ml-auto\">\r\n            <li class=\"nav-item mx-0 mx-lg-1\">\r\n                ");
                 EndContext();
                 BeginContext(491, 230, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "98792fc64a5744e9bc5a854a4027ade7", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7916287a58544c31bc03f2a9f5c353d9", async() => {
                     BeginContext(623, 6, true);
                     WriteLiteral("Hello ");
                     EndContext();
@@ -171,7 +171,7 @@ else
             WriteLiteral("    <ul class=\"nav navbar-nav navbar-right ml-auto\">\r\n        <li class=\"nav-item mx-0 mx-lg-1\">");
             EndContext();
             BeginContext(1031, 125, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7ec222934f2d48c08af3abcd135d0ba0", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "12a9fa67c4754ff99344dbaa414a4169", async() => {
                 BeginContext(1144, 8, true);
                 WriteLiteral("Register");
                 EndContext();
@@ -196,7 +196,7 @@ else
             WriteLiteral("</li>\r\n        <li class=\"nav-item mx-0 mx-lg-1\">");
             EndContext();
             BeginContext(1205, 119, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "0c2fe3f5c88c46b685bdf6b971563770", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f5d3bdf146f6488a9f42a874e564d631", async() => {
                 BeginContext(1315, 5, true);
                 WriteLiteral("Login");
                 EndContext();

@@ -469,7 +469,7 @@ using NackowskisMax.Models;
                     ");
             EndContext();
             BeginContext(6698, 3819, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "887c10654af1413da17ecc1c13ab9356", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "9110179c9f3c4182a5893faa0578adf9", async() => {
                 BeginContext(6767, 1136, true);
                 WriteLiteral(@"
                         <input type=""hidden"" name=""Id"" id=""js-auctionId"" required=""required"" value="""" />
@@ -570,7 +570,7 @@ using NackowskisMax.Models;
             WriteLiteral("            ");
             EndContext();
             BeginContext(11553, 348, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "728109f73d824f338b7ca04a56aa345b", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "dcaccb2e75b94283bbd7e22eac72c44a", async() => {
                 BeginContext(11628, 266, true);
                 WriteLiteral(@"
                         <input type=""hidden"" name=""Id"" id=""js-auctionId"" required=""required"" value="""" />
@@ -623,7 +623,7 @@ using NackowskisMax.Models;
             WriteLiteral("\n                    <ul id=\"js-bidList\"></ul>\r\n                    <hr class=\"star-dark mb-5\">\r\n                    ");
             EndContext();
             BeginContext(13042, 707, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b723018dd0984266b9eac9bb7b1bde69", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "87569fbab2d648388507b72275da6098", async() => {
                 BeginContext(13109, 633, true);
                 WriteLiteral(@"
                         <input type=""hidden"" name=""AuctionId"" id=""js-auctionId"" required=""required"" value="""" />
