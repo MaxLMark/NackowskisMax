@@ -8,6 +8,7 @@ environment:
   webapp_folder: .\NackowskisMax
   webapp_proj: $(webapp_folder)\NackowskisMax.csproj
   webapp_package: NackowskisMax.$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
+  test_proj: .\XUnitTestProject1\NackowskisMaxTest.csproj
 
 before_build:
   - ps: dotnet restore
@@ -22,3 +23,7 @@ after_build:
 artifacts:
   - path: '**\$(webapp_package).zip'
 
+test: off
+test_script:
+  - ps: .\test_script.ps1 $env:test_proj
+  
