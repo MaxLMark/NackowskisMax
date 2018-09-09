@@ -1,0 +1,26 @@
+version: 1.0.{build}
+
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+
+enviroment:
+  webapp_folder: .\NackowskisMax
+  webapp_proj: $(webapp_folder)\NackowskisMax.csproj
+  webapp_package: NackowskisMax.$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REP_BRANCH)
+
+
+
+before_build:
+  - ps: dotnet restore
+
+build:
+  verbosity: minimal
+  project: NackowskisMax.sln
+
+after_build:
+  - ps: .\package.ps1 -projectPath $env:webapp_proj -packageName $env:webapp_package -absoluteRepoDirectory $env:APPVEYOR_BUILD_FOLDER
+
+artifacts:
+  - path: '**\$(webapp_package).zip'
+
