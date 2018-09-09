@@ -7,9 +7,7 @@ platform: Any CPU
 enviroment:
   webapp_folder: .\NackowskisMax
   webapp_proj: $(webapp_folder)\NackowskisMax.csproj
-  webapp_package: NackowskisMax.$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REP_BRANCH)
-
-
+  webapp_package: NackowskisMax.$(APPVEYOR_BUILD_VERSION)-$(APPVEYOR_REPO_BRANCH)
 
 before_build:
   - ps: dotnet restore
