@@ -34,7 +34,7 @@ deploy:
     website: $(azure_website)
     username: $(azure_username)
     password: $(azure_password)
-    artifact: $(webapp1_package).zip
+    artifact: $(webapp_package).zip
     aspnet_core: true
     aspnet_core_force_restart: true
     app_offline: true
