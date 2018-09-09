@@ -1,0 +1,69 @@
+﻿<header class="masthead text-dark text-center">
+    <div class="container">
+        <h2>Statistics</h2>
+        <div class="row">
+            <div class="col-sm-12 col-sm-offset-0 col-md-4 offset-md-4">
+
+                <div class="control-group">
+                    <div class="form-group">
+                        @*<input name="startDate" id="js-startDate" width="276" required="required" data-validation-required-message="Please enter a start date" />*@
+
+                        <div class="input-group date" id="js-pickMonth" data-target-input="nearest">
+                            <input name="startDate" id="js-startDateInput" type="text" class="form-control datetimepicker-input" data-target="#js-pickMonth" required="required" data-validation-required-message="Please enter a start date" />
+                            <div class="input-group-append" data-target="#js-pickMonth" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-secondary" id="js-myAuctions" asp-area="" asp-controller="Admin" asp-action="MyAuctions">
+            My auctions
+        </button>
+        <button class="btn btn-secondary" id="js-allAuctions" asp-area="" asp-controller="Admin" asp-action="AllAuctions">
+            All auctions
+        </button>
+    </div>
+</header>
+
+<div class="container js-auctionList">
+    <partial name="_AuctionList" />
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('#js-myAuctions').click(function () {
+                var date = $('#js-pickMonth').find('input').val();
+                console.log(date);
+                $.ajax({
+                    type: "GET",
+                    url: '/Admin/MyAuctions/' + date,
+                    success: function (result) {
+                        // the result is the returned html from the partial view
+                        $('.js-auctionList').html(result);
+                    },
+                });
+            });
+
+            $('#js-allAuctions').click(function () {
+                var date = $('#js-pickMonth').find('input').val();
+                $.ajax({
+                    type: "GET",
+                    url: '/Admin/AllAuctions/' + date,
+                    success: function (result) {
+                        // the result is the returned html from the partial view
+                        $('.js-auctionList').html(result);
+                    }
+                });
+            });
+
+            $('#js-pickMonth').datetimepicker({
+                useCurrent: true,
+                format: "YYYY-MM"
+            });
+        });
+    </script>
+}

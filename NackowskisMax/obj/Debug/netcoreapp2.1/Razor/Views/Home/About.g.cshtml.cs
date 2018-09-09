@@ -24,8 +24,8 @@ using NackowskisMax.Models;
 #line default
 #line hidden
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"f5989146c20e297d05361cc87bf290b8b98e9284", @"/Views/Home/About.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"f541985f2dc74db33f8d45fb6926e71c2ce474ee", @"/Views/_ViewImports.cshtml")]
-    public class Views_Home_About : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"05232e470bca715ec26e09b36621f62e6980b73a", @"/Views/_ViewImports.cshtml")]
+    public class Views_Home_About : NackowskisMax.Mvc.CustomRazorPage<dynamic>
     {
         #pragma warning disable 1998
         public async override global::System.Threading.Tasks.Task ExecuteAsync()

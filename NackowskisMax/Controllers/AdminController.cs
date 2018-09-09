@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using NackowskisMax.Areas.Identity.Pages.Account;
 using NackowskisMax.BusinessLogic;
 using NackowskisMax.Models;
+using NackowskisMax.Utility;
 
 namespace NackowskisMax.Controllers
 {
@@ -66,12 +70,80 @@ namespace NackowskisMax.Controllers
 
             return View();
         }
+        public IActionResult Statistics()
+        {
+            return View();
+        }
+        [Route("Admin/AllAuctions/{*date}")]
+        public async Task<IActionResult> AllAuctions(DateTime? date = null)
+        {
+            var stapleVM = new StapleViewModel();
+            var highestBidList = new List<double>();
+            var estimateList = new List<double>();
 
+            var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
+
+            if (date.HasValue)
+            {
+                auctionItems = auctionItems.Where(a => a.StartDate.Month == date.Value.Month).ToArray();
+            }
+
+            foreach (var auction in auctionItems)
+            {
+                auction.OfferList.AddRange(await _auctionFacade.GetAllOffersAsync((int)auction.Id));
+                if (auction.OfferList.Count > 0)
+                {
+                    estimateList.Add((double)auction.Estimate);
+                    highestBidList.Add(OfferUtility.GetHighestBid(auction.OfferList));
+                }
+            }
+
+            stapleVM.WinningBidAvg = highestBidList.Average();
+            stapleVM.EstimateAvg = estimateList.Average();
+            stapleVM.Difference = OfferUtility.GetAverageDifference(highestBidList, estimateList);
+
+            return PartialView("_AuctionList", stapleVM);
+        }
+
+        [Route("Admin/MyAuctions/{*date}")]
+        public async Task<IActionResult> MyAuctions(DateTime? date = null)
+        {
+            var stapleVM = new StapleViewModel();
+            var highestBidList = new List<double>();
+            var estimateList = new List<double>();
+
+            var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
+            if (date.HasValue)
+            {
+                auctionItems = auctionItems.Where(a => a.StartDate.Month == date.Value.Month).ToArray();
+            }
+            foreach (var auction in auctionItems)
+            {
+                if (auction.CreatedBy == User.Identity.Name)
+                {
+                    auction.OfferList.AddRange(await _auctionFacade.GetAllOffersAsync((int)auction.Id));
+                    estimateList.Add((double)auction.Estimate);
+                    if (auction.OfferList.Count > 0)
+                    {
+                        highestBidList.Add(auction.OfferList.Max(x => x.Sum));
+                    }
+                }
+            }
+
+            stapleVM.WinningBidAvg = highestBidList.Average();
+            stapleVM.EstimateAvg = estimateList.Average();
+            stapleVM.Difference = (highestBidList.Average() - estimateList.Average());
+
+
+            return PartialView("_AuctionList", stapleVM);
+        }
         public IActionResult CreateAdmin()
         {
             var model = new NewAdminInput();
             return View(model);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> CreateAdmin(NewAdminInput newAdmin)
@@ -84,7 +156,7 @@ namespace NackowskisMax.Controllers
 
             }
             return RedirectToAction("Index", "Home");
-            
+
         }
 
 

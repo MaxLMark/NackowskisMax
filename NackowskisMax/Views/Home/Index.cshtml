@@ -6,10 +6,10 @@
     }*/
 
     .marranTable {
-        margin-right: auto;
-        margin-left: auto;
+        /*margin-right: auto;
+        margin-left: auto;*/
         display: block;
-        width: 80%;
+        width: 100%;
     }
 
     .redText {
@@ -60,21 +60,6 @@
     <div class="container" style="padding-top:80px">
         <h2 class="text-center text-uppercase  text-dark">Auction list:</h2>
         <hr class="star-dark mb-5">
-        @{
-            var currentUser = "";
-            var isAdmin = false;
-
-            if (User.IsInRole("Admin"))
-            {
-                isAdmin = true;
-            }
-
-            if (User.Identity.Name != null)
-            {
-
-                currentUser = User.Identity.Name;
-            }
-        }
         <div class="row marranTable">
 
             <table id="example" class="display" style="width:100%">
@@ -83,10 +68,10 @@
                         <th>Id</th>
                         <th>Titel</th>
                         <th>Description</th>
-                        <th>StartDate</th>
-                        <th>EndDate</th>
+                        <th>Startdate</th>
+                        <th>Enddate</th>
                         <th>Estimate</th>
-                        <th>CreatedBy</th>
+                        <th>Created by</th>
                         <th>Active</th>
 
                     </tr>
@@ -129,15 +114,15 @@
                         <th>Id</th>
                         <th>Titel</th>
                         <th>Beskrivning</th>
-                        <th>StartDate</th>
-                        <th>EndDate</th>
+                        <th>Startdate</th>
+                        <th>Enddate</th>
                         <th>Estimate</th>
-                        <th>CreatedBy</th>
+                        <th>Created by</th>
                         <th>Active</th>
                     </tr>
                 </tfoot>
             </table>
-            @if (User.IsInRole("Admin"))
+            @if (IsAdmin)
             {
                 <a class="btn btn-primary portfolio-item" href="#portfolio-modal-auction" role="button" id="js-createAuction" data-url="/Admin/Create">
                     Create Auction
@@ -305,8 +290,8 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            var currUser = '@currentUser';
-            var isAdmin = '@isAdmin';
+            var currUser = '@CurrentUser';
+            var isAdmin = '@IsAdmin';
 
             if (currUser !== '') {
                 //doo it

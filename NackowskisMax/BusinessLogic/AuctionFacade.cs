@@ -24,7 +24,7 @@ namespace NackowskisMax.BusinessLogic
 
             return _auctionRepository.GetAllAsync(groupId);
         }
-        public Task<AuctionItem> GetAuction(int Id)
+        public Task<AuctionItem> GetAuctionAsync(int Id)
         {
             return _auctionRepository.Get(groupId, Id);
         }

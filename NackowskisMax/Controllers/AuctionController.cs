@@ -32,9 +32,19 @@ namespace NackowskisMax.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Delete(int Id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _auctionFacade.DeleteAuction(Id);
+            var auction = await _auctionFacade.GetAuctionAsync(id);
+            if(auction == null)
+            {
+                throw new InvalidOperationException("Can't delete non-existing auction.");
+            }
+            if(auction.CreatedBy != User.Identity.Name)
+            {
+                throw new UnauthorizedAccessException("Can't delete auctions that you don't own.");
+            }
+
+            await _auctionFacade.DeleteAuction(id);
             return RedirectToAction("Index", "Home");
         }
 

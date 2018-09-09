@@ -1,0 +1,128 @@
+﻿@model StapleViewModel
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        font-size: 11px;
+    }
+</style>
+
+@if (Model != null)
+{
+
+    @*<div id="chartdiv">
+
+        </div>*@
+    <div id="GateChartHolder" style="display: table; width: 100%; height: 400px;"></div>
+
+
+}
+
+
+    <script>
+    var winningBidAvg = @ToDecimalString(Model?.WinningBidAvg ?? 0)
+    var estimateAvg = @ToDecimalString(Model?.EstimateAvg ?? 0)
+    var difference = @ToDecimalString(Model?.Difference ?? 0)
+
+    //var winningBidAvg = 8;
+    //var estimateAvg = 7;
+    //var difference = 3;
+    if (winningBidAvg>0) {
+        $(document).ready(function () {
+            data = [{
+                "LaneTitle": "Winning bids",
+                "Count": winningBidAvg
+            }, {
+                "LaneTitle": "Estimates",
+                "Count": estimateAvg
+            }, {
+                "LaneTitle": "Difference",
+                "Count": difference
+            }];
+
+            $("#GateChartHolder").html("<canvas id=\"gateChart\" width=\"400\" height=\"200\"></canvas>");
+            var ctx = document.getElementById("gateChart");
+            var vlbl = [];
+            var vcount = [];
+            $.each(data, function (k, v) {
+                vlbl.push(v.LaneTitle);
+                vcount.push(v.Count);
+            });
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: vlbl,
+                    datasets: [{
+                        label: 'Count',
+                        data: vcount,
+                        borderWidth: 1,
+                        backgroundColor: ["#2ECC71", "#1ABC9C", "#F39C12"]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            type: 'logarithmic',
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (tick, index, ticks) {
+                                    return tick.toLocaleString();
+                                },
+                                min: 0
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    //var chart = AmCharts.makeChart("chartdiv", {
+    //    "type": "serial",
+    //    "theme": "light",
+    //    "dataProvider": [{
+    //        "country": "Winning Bid Average",
+    //        "visits": winningBidAvg,
+    //        "color": "#FF0F00"
+    //    },{
+    //        "country": "Estimate Average",
+    //            "visits": estimateAvg,
+    //            "color": "#FF6600"
+    //    },{
+    //            "country": "Difference",
+    //            "visits": difference,
+    //            "color": "#FCD202"
+    //    }],
+    //    "valueAxes": [{
+    //        "gridColor": "#FFFFFF",
+    //        "gridAlpha": 0.2,
+    //        "dashLength": 0
+    //    }],
+    //    "gridAboveGraphs": true,
+    //    "startDuration": 1,
+    //    "graphs": [{
+    //        "balloonText": "[[category]]: <b>[[value]]</b>",
+    //        "fillColorsField": "color",
+    //        "fillAlphas": 0.8,
+    //        "lineAlpha": 0.2,
+    //        "type": "column",
+    //        "valueField": "visits"
+    //    }],
+    //    "chartCursor": {
+    //        "categoryBalloonEnabled": false,
+    //        "cursorAlpha": 0,
+    //        "zoomable": false
+    //    },
+    //    "categoryField": "country",
+    //    "categoryAxis": {
+    //        "gridPosition": "start",
+    //        "gridAlpha": 0,
+    //        "tickPosition": "start",
+    //        "tickLength": 20
+    //    },
+    //    "export": {
+    //        "enabled": false
+    //    }
+
+    //});
+    }
+    </script>
