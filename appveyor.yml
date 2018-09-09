@@ -26,4 +26,20 @@ artifacts:
 test: off
 test_script:
   - ps: .\test_script.ps1 $env:test_proj
+
+deploy:
+  - provider: WebDeploy
+    name: Production
+    server: https://$(azure_website).scm.azurewebsites.net:443/msdeploy.axd?site=$(azure_website)
+    website: $(azure_website)
+    username: $(azure_username)
+    password: $(azure_password)
+    artifact: $(webapp1_package).zip
+    aspnet_core: true
+    aspnet_core_force_restart: true
+    app_offline: true
+    remove_files: true
+    do_not_use_checksum: true
+    on:
+      branch: master
   
