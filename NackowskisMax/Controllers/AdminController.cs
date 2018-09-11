@@ -88,6 +88,15 @@ namespace NackowskisMax.Controllers
                 auctionItems = auctionItems.Where(a => a.StartDate.Month == date.Value.Month).ToArray();
             }
 
+            if (auctionItems.Length == 0)
+            {
+                stapleVM.WinningBidAvg = 0;
+                stapleVM.EstimateAvg = 0;
+                stapleVM.Difference = 0;
+
+                return PartialView("_AuctionList", stapleVM);
+            }
+
             foreach (var auction in auctionItems)
             {
                 auction.OfferList.AddRange(await _auctionFacade.GetAllOffersAsync((int)auction.Id));
@@ -115,25 +124,35 @@ namespace NackowskisMax.Controllers
             var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
             if (date.HasValue)
             {
+                
                 auctionItems = auctionItems.Where(a => a.StartDate.Month == date.Value.Month).ToArray();
-            }
-            foreach (var auction in auctionItems)
-            {
-                if (auction.CreatedBy == User.Identity.Name)
+                if (auctionItems.Length == 0)
                 {
-                    auction.OfferList.AddRange(await _auctionFacade.GetAllOffersAsync((int)auction.Id));
-                    estimateList.Add((double)auction.Estimate);
-                    if (auction.OfferList.Count > 0)
+                    stapleVM.WinningBidAvg = 0;
+                    stapleVM.EstimateAvg = 0;
+                    stapleVM.Difference = 0;
+
+                    return PartialView("_AuctionList", stapleVM);
+                }
+                foreach (var auction in auctionItems)
+                {
+                    if (auction.CreatedBy == User.Identity.Name)
                     {
-                        highestBidList.Add(auction.OfferList.Max(x => x.Sum));
+                        auction.OfferList.AddRange(await _auctionFacade.GetAllOffersAsync((int)auction.Id));
+                        estimateList.Add((double)auction.Estimate);
+                        if (auction.OfferList.Count > 0)
+                        {
+                            highestBidList.Add(auction.OfferList.Max(x => x.Sum));
+                        }
                     }
                 }
+
+                stapleVM.WinningBidAvg = highestBidList.Average();
+                stapleVM.EstimateAvg = estimateList.Average();
+                stapleVM.Difference = (highestBidList.Average() - estimateList.Average());
+
             }
-
-            stapleVM.WinningBidAvg = highestBidList.Average();
-            stapleVM.EstimateAvg = estimateList.Average();
-            stapleVM.Difference = (highestBidList.Average() - estimateList.Average());
-
+            
 
             return PartialView("_AuctionList", stapleVM);
         }

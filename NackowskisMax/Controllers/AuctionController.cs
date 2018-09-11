@@ -35,11 +35,11 @@ namespace NackowskisMax.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var auction = await _auctionFacade.GetAuctionAsync(id);
-            if(auction == null)
+            if (auction == null)
             {
                 throw new InvalidOperationException("Can't delete non-existing auction.");
             }
-            if(auction.CreatedBy != User.Identity.Name)
+            if (auction.CreatedBy != User.Identity.Name)
             {
                 throw new UnauthorizedAccessException("Can't delete auctions that you don't own.");
             }
@@ -50,6 +50,19 @@ namespace NackowskisMax.Controllers
 
         public async Task<IActionResult> CreateBid(Offer offer)
         {
+            var offerlist = await _auctionFacade.GetAllOffersAsync((int)offer.AuctionId);
+            int highestbid = 0;
+            foreach (var bid in offerlist)
+            {
+                if (bid.Sum > highestbid)
+                {
+                    highestbid = bid.Sum;
+                }
+            }
+            if (offer.Sum < highestbid)
+            {
+                throw new InvalidOperationException("You cant bid lower than the highest bid");
+            }
             offer.Bidder = User.Identity.Name;
 
             await _auctionFacade.CreateOffer(offer);
