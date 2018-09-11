@@ -382,3 +382,51 @@ a:focus, a:hover, a:active {
   background-color: #1a252f;
   border-color: #1a252f;
 }
+
+
+.marranTable {
+    display: block;
+    width: 100%;
+}
+
+.redText {
+    color: red;
+    font-weight: bold;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.notValidPrice {
+    border: solid;
+    border-color: red !important;
+}
+
+.isValidPrice {
+    border: solid;
+    border-color: lightgreen !important;
+}
+
+.notValidPrice:focus {
+    border: solid;
+    border-color: red !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none;
+}
+
+.isValidPrice:focus {
+    border: solid;
+    border-color: lightgreen !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none;
+}
+
+.js-inActiveAuction {
+    color: lightcoral;
+}
