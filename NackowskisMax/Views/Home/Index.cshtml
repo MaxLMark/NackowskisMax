@@ -16,6 +16,7 @@
                         <th>Estimate</th>
                         <th>Created by</th>
                         <th>Active</th>
+                        <th>Highest Bid</th>
 
                     </tr>
                 </thead>
@@ -35,6 +36,13 @@
                                 <td>@item.Estimate SEK</td>
                                 <td>@item.CreatedBy</td>
                                 <td>@item.Active</td>
+                                @if (item.OfferList.Count > 0)
+                                {
+                                    <td style="color:orangered; font-weight:bold">@item.OfferList.Max(x => x.Sum)</td>
+                                }
+                                else
+                                {
+                                    <td>0</td>}
                             </tr>
                         }
                         else
@@ -48,6 +56,15 @@
                                 <td>@item.Estimate SEK</td>
                                 <td>@item.CreatedBy</td>
                                 <td>@item.Active</td>
+                                @if (item.OfferList.Count > 0)
+                                {
+                                    <td style="color:orangered; font-weight:bold">@item.OfferList.Max(x => x.Sum)</td>
+                                }
+                                else
+                                {
+                                    <td>0</td>}
+
+
                             </tr>
                         }
                     }
@@ -62,6 +79,7 @@
                         <th>Estimate</th>
                         <th>Created by</th>
                         <th>Active</th>
+                        <th>Highest Bid</th>
                     </tr>
                 </tfoot>
             </table>
@@ -208,6 +226,9 @@
                 <div class="col-lg-8 mx-auto">
                     <h3 class="text-secondary text-uppercase mb-0" id="modalTitle">Bids:</h3>
                     <hr class="star-dark mb-5">
+                    <h3 id="js-finishedTitle"></h3>
+                    <h5 id="js-finishedDescription"></h5>
+                    <br />
                     <p id="js-highestBidLabel" style="font-weight:bold">No bids yet!</p>
                     <ul id="js-bidList"></ul>
                     <hr class="star-dark mb-5">

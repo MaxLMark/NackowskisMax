@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NackowskisMax.BusinessLogic;
 using NackowskisMax.Models;
+using NackowskisMax.Facade;
 using NackowskisMax.Utility.Http;
+using NackowskisMax.BusinessLogic;
 
 namespace NackowskisMax.Controllers
 {
@@ -18,63 +19,12 @@ namespace NackowskisMax.Controllers
             _auctionFacade = auctionFacade;
         }
 
-        //public async Task<IActionResult> Index() {
-        //    //string url = http://nackowskis.azurewebsites.net/api/Auktion/1
-        //    var items = await _restClient.GetAsync<AuctionItem>("http://nackowskis.azurewebsites.net/api/Auktion/1/2067");
-          
-        //    return Json(items);
-        //}
         public async Task<IActionResult> Index()
         {
-            var auctionItemList = new List<AuctionItem>();
             var auctionItems = await _auctionFacade.GetAllAuctionsAsync();
-            foreach (var item in auctionItems)
-            {
-                var offerlist = await _auctionFacade.GetAllOffersAsync((int)item.Id);
-                var today = DateTime.Now;
-                var auctionEndDate = item.EndDate;
-
-                var result = DateTime.Compare(today, auctionEndDate);
-
-                if (result < 0)
-                    item.Active = "Yes";
-                else if (result == 0)
-                    item.Active = "Yes";
-                else
-                    item.Active = "No";
-
-                if (offerlist.Length>0)
-                {
-                    foreach (var offer in offerlist)
-                    {
-                        item.OfferList.Add(offer);
-                    }
-                }
-                
-                auctionItemList.Add(item);
-            }
+            var auctionItemList = await _auctionFacade.CheckActivity(auctionItems);
 
             return View(auctionItemList);
-        }
-
-        public async Task<IActionResult> Delete(string deleteAuction)
-        {
-            
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
         }
 
         public IActionResult Privacy()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NackowskisMax.BusinessLogic;
+using NackowskisMax.Facade;
 using NackowskisMax.Models;
 
 namespace NackowskisMax.Controllers
@@ -50,22 +51,11 @@ namespace NackowskisMax.Controllers
 
         public async Task<IActionResult> CreateBid(Offer offer)
         {
-            var offerlist = await _auctionFacade.GetAllOffersAsync((int)offer.AuctionId);
-            int highestbid = 0;
-            foreach (var bid in offerlist)
-            {
-                if (bid.Sum > highestbid)
-                {
-                    highestbid = bid.Sum;
-                }
-            }
-            if (offer.Sum < highestbid)
-            {
-                throw new InvalidOperationException("You cant bid lower than the highest bid");
-            }
             offer.Bidder = User.Identity.Name;
-
+            var offerlist = await _auctionFacade.GetAllOffersAsync((int)offer.AuctionId);
+            int highestbid = await _auctionFacade.CheckOfferBid(offerlist, offer.Sum);
             await _auctionFacade.CreateOffer(offer);
+
             return RedirectToAction("Index", "Home");
         }
     }

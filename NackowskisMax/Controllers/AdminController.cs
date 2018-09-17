@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NackowskisMax.Areas.Identity.Pages.Account;
 using NackowskisMax.BusinessLogic;
+using NackowskisMax.Facade;
 using NackowskisMax.Models;
 using NackowskisMax.Utility;
 
@@ -59,7 +60,7 @@ namespace NackowskisMax.Controllers
 
         public async Task<IActionResult> Edit(AuctionItem auction)
         {
-            auction.CreatedBy = "testilainen123";
+            auction.CreatedBy = User.Identity.Name;
 
             if (ModelState.IsValid)
             {

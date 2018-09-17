@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NackowskisMax.Utility.Http;
 using NackowskisMax.BusinessLogic;
+using NackowskisMax.Facade;
 
 namespace NackowskisMax
 {
@@ -40,6 +41,8 @@ namespace NackowskisMax
             services.AddTransient<IAuctionRepository, RestfulAuctionRepository>();
             services.AddTransient<IOfferRepository, RestfulOfferRepository>();
             services.AddTransient<AuctionFacade>();
+            services.AddTransient<AuctionBusiness>();
+            services.AddTransient<OfferBusiness>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

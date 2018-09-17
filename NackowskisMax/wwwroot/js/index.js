@@ -15,7 +15,15 @@
     });
 
 
-    var table = $('#example').DataTable();
+    var table = $('#example').DataTable({
+        "columnDefs": [
+            { "visible": false, "targets": 0 },
+            { "visible": false, "targets": 2 },
+            { "visible": false, "targets": 3 },
+            { "visible": false, "targets": 6 },
+            { "visible": false, "targets": 7 }
+            ]
+    });
     $(".dataTables_filter").hide();
 
     // Apply the search
@@ -131,6 +139,8 @@
             $("li p").first().addClass("redText");
             $("li").first().addClass("js-highestBid");
             if (table.$('tr.selected').hasClass("js-inActiveAuction")) {
+                $('#js-finishedTitle').text(items.Titel);
+                $('#js-finishedDescription').text(items.Beskrivning);
                 $('#js-highestBidLabel').text("The winning bid:");
                 $('#js-bidInput').addClass('d-none');
                 $('#js-bidSubmit').addClass('d-none');
